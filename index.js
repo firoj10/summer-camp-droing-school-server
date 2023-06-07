@@ -53,6 +53,14 @@ app.use(express.json())
        const result = {admin: user?.role === 'admin'}
        res.send(result);
      })
+     app.get('/student/instructor/:email', async (req, res)=>{
+       const email = req.params.email;
+       const query = {email: email}
+       const user = await studentCollection.findOne(query);
+       console.log(user)
+       const result = {admin: user?.role === 'instructor'}
+       res.send(result);
+     })
      
      app.patch('/student/admin/:id', async (req, res)=>{
        const id = req.params.id;
@@ -60,6 +68,17 @@ app.use(express.json())
        const updateDoc ={
          $set:{
            role:'admin'
+         },
+       };
+       const result= await studentCollection.updateOne(filter, updateDoc);
+       res.send(result)
+     })
+     app.patch('/student/instructor/:id', async (req, res)=>{
+       const id = req.params.id;
+       const filter = {_id: new ObjectId(id)}
+       const updateDoc ={
+         $set:{
+           role:'instructor'
          },
        };
        const result= await studentCollection.updateOne(filter, updateDoc);
