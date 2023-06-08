@@ -100,6 +100,31 @@ app.use(express.json())
     })
 
 
+//class collection
+    app.patch('/allclass/:status', async (req, res)=>{
+      const status = req.params.status;
+      const filter = {status: 'pending'}
+      const updateDoc ={
+        $set:{
+          status:'approve'
+        },
+      };
+      const result= await classCollection.updateOne(filter, updateDoc);
+      res.send(result)
+    })
+
+    app.get('/allclass/approve', async (req, res) => {
+      const status = req.query.status;
+      const query = { status: 'approve' };
+      
+      if (status === 'panding') {
+        res.send([]);
+      } else {
+        const result = await classCollection.find(query).toArray();
+        res.send(result);
+      }
+    });
+
      // Send a ping to confirm a successful connection
      await client.db("admin").command({ ping: 1 });
      console.log("Pinged your deployment. You successfully connected to MongoDB!");
