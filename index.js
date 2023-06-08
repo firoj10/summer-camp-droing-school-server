@@ -29,7 +29,10 @@ app.use(express.json())
 
 
      const studentCollection = client.db("studentDb").collection("student");
+     const classCollection = client.db("studentDb").collection("class");
 
+
+     //student
      app.get('/student', async(req, res)=>{
        const result = await studentCollection.find().toArray();
        res.send(result)
@@ -86,7 +89,16 @@ app.use(express.json())
      })
 
      //instructor
-     
+     app.post('/addclass', async(req, res)=>{
+      const user = req.body;
+      const result = await classCollection.insertOne(user);
+      res.send(result);
+    })
+    app.get('/allclass', async(req, res)=>{
+      const result = await classCollection.find().toArray();
+      res.send(result)
+    })
+
 
      // Send a ping to confirm a successful connection
      await client.db("admin").command({ ping: 1 });
