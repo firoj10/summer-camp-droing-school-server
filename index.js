@@ -98,6 +98,13 @@ app.use(express.json())
       const result = await classCollection.find().toArray();
       res.send(result)
     })
+    app.get('/student/instructor/:role', async (req, res) => {
+      const role = req.params.role;
+      const instructor = { role: 'instructor' }; 
+      const user = await studentCollection.find(instructor).toArray();
+      
+      res.send(user);
+    });
 
 
 //class collection
