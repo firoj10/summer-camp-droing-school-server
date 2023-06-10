@@ -133,15 +133,7 @@ app.use(express.json())
       }
     });
 
-    //selected class collection
-
-    // app.get('/selectclass/:email', async (req, res) => {
-    //   const email = req.params.email;
-    //   const query = { email: email };
-    //   const result = await selectclassCollection.find(query).toArray();
-    //   res.send(result);
-    // });
-
+    //selected class collection alll and final
 
     app.get('/selectclass/:email', async (req, res) => {
       const email = req.params.email;
