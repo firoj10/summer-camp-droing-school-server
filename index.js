@@ -30,13 +30,22 @@ app.use(express.json())
 
      const studentCollection = client.db("studentDb").collection("student");
      const classCollection = client.db("studentDb").collection("class");
+     const selectclassCollection = client.db("studentDb").collection("selectclass");
 
 
-     //student
+     //studentCollection
      app.get('/student', async(req, res)=>{
        const result = await studentCollection.find().toArray();
        res.send(result)
      })
+
+     app.get('/student/instructor/:role', async (req, res) => {
+      const role = req.params.role;
+      const instructor = { role: 'instructor' }; 
+      const user = await studentCollection.find(instructor).toArray();
+      console.log(user)
+      res.send(user);
+    });
      app.post('/student', async(req, res)=>{
        const user = req.body;
        const query = {email: user.email}
@@ -52,7 +61,6 @@ app.use(express.json())
        const email = req.params.email;
        const query = {email: email}
        const user = await studentCollection.findOne(query);
-       console.log(user)
        const result = {admin: user?.role === 'admin'}
        res.send(result);
      })
@@ -60,7 +68,6 @@ app.use(express.json())
        const email = req.params.email;
        const query = {email: email}
        const user = await studentCollection.findOne(query);
-       console.log(user)
        const result = {admin: user?.role === 'instructor'}
        res.send(result);
      })
@@ -88,26 +95,20 @@ app.use(express.json())
        res.send(result)
      })
 
-     //instructor
+   
+
+     //classCollection
      app.post('/addclass', async(req, res)=>{
       const user = req.body;
       const result = await classCollection.insertOne(user);
       res.send(result);
     })
+
     app.get('/allclass', async(req, res)=>{
       const result = await classCollection.find().toArray();
       res.send(result)
     })
-    app.get('/student/instructor/:role', async (req, res) => {
-      const role = req.params.role;
-      const instructor = { role: 'instructor' }; 
-      const user = await studentCollection.find(instructor).toArray();
-      
-      res.send(user);
-    });
-
-
-//class collection
+  
     app.patch('/allclass/:status', async (req, res)=>{
       const status = req.params.status;
       const filter = {status: 'pending'}
@@ -132,6 +133,47 @@ app.use(express.json())
       }
     });
 
+    //selected class collection
+
+    // app.get('/selectclass/:email', async (req, res) => {
+    //   const email = req.params.email;
+    //   const query = { email: email };
+    //   const result = await selectclassCollection.find(query).toArray();
+    //   res.send(result);
+    // });
+
+
+    app.get('/selectclass/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await selectclassCollection.find(query).toArray();
+      res.send(result);
+    });
+
+
+
+
+
+
+
+    app.post('/selectclass', async(req, res)=>{
+      const item = req.body;
+      console.log(item)
+      const result = await selectclassCollection.insertOne(item);
+      res.send(result);
+    })
+     
+    app.delete('/selectclass/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await selectclassCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
+
+
+
      // Send a ping to confirm a successful connection
      await client.db("admin").command({ ping: 1 });
      console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -143,8 +185,6 @@ app.use(express.json())
  run().catch(console.dir);
  
   
-
-
 app.get('/', (req, res)=>{
     res.send('drowing school is running')
 })
