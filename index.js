@@ -2,6 +2,7 @@ const express = require('express')
 const app = express();
 const cors = require('cors');
 require('dotenv').config()
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const port = process.env.PORT || 5000;
 
 // middlewire
@@ -31,6 +32,7 @@ app.use(express.json())
      const studentCollection = client.db("studentDb").collection("student");
      const classCollection = client.db("studentDb").collection("class");
      const selectclassCollection = client.db("studentDb").collection("selectclass");
+     const paymentsCollection = client.db("studentDb").collection("payments");
 
 
      //studentCollection
@@ -161,6 +163,47 @@ app.use(express.json())
       const result = await selectclassCollection.deleteOne(query);
       res.send(result);
     })
+
+
+
+
+//
+//create payment intent
+app.post("/create-payment-intent", async (req, res) => {
+  const booking = req.body;
+  const price = booking.price;
+  const amount = price * 100;
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    currency: "usd",
+    amount: amount,
+    payment_method_types: ["card"],
+  });
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
+
+app.post("/payments", async (req, res) => {
+  const payment = req.body;
+  const result = await paymentsCollection.insertOne(payment);
+  const id = payment.bookingId;
+  const filter = { _id: new ObjectId(id) };
+  const updatedDoc = {
+    $set: {
+      paid: true,
+      transactionId: payment.transactionId,
+    },
+  };
+  const updatedResult = await classCollection.updateOne(
+    filter,
+    updatedDoc
+  );
+  res.send(result);
+});
+  
+
+
 
 
 
