@@ -198,10 +198,7 @@ app.use(express.json())
       res.send(result);
     })
 
-
-
-
-//
+/////////////
 //create payment intent
 app.post("/create-payment-intent", async (req, res) => {
   const booking = req.body;
@@ -241,11 +238,6 @@ app.get('/payments', async(req, res)=>{
   const result = await paymentsCollection.find().toArray();
   res.send(result)
 })
-
-
-
-
-
 
 
      // Send a ping to confirm a successful connection
