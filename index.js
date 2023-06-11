@@ -41,8 +41,6 @@ app.use(express.json())
        res.send(result)
      })
      
-     
-
      app.post('/student', async(req, res)=>{
        const user = req.body;
        const query = {email: user.email}
@@ -54,8 +52,6 @@ app.use(express.json())
        res.send(result);
      })
      
-
-
      app.get('/student/instructor/teacher/:email', async (req, res)=>{
       const email = req.params.email;
       const query = {email: email}
@@ -92,9 +88,6 @@ app.use(express.json())
        res.send(result)
      })
 
-   
-
-
      app.patch('/student/instructor/:id', async (req, res)=>{
        const id = req.params.id;
        const filter = {_id: new ObjectId(id)}
@@ -107,7 +100,6 @@ app.use(express.json())
        res.send(result)
      })
 
-  
   
 
      //classCollection
