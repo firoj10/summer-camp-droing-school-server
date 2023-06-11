@@ -40,14 +40,9 @@ app.use(express.json())
        const result = await studentCollection.find().toArray();
        res.send(result)
      })
+     
+     
 
-     app.get('/student/instructor/:role', async (req, res) => {
-      const role = req.params.role;
-      const instructor = { role: 'instructor' }; 
-      const user = await studentCollection.find(instructor).toArray();
-      console.log(user)
-      res.send(user);
-    });
      app.post('/student', async(req, res)=>{
        const user = req.body;
        const query = {email: user.email}
@@ -59,6 +54,16 @@ app.use(express.json())
        res.send(result);
      })
      
+
+
+     app.get('/student/instructor/teacher/:email', async (req, res)=>{
+      const email = req.params.email;
+      const query = {email: email}
+      const user = await studentCollection.findOne(query);
+      const result = {instructor: user?.role === 'instructor'}
+      res.send(result);
+    })
+
      app.get('/student/admin/:email', async (req, res)=>{
        const email = req.params.email;
        const query = {email: email}
@@ -66,14 +71,22 @@ app.use(express.json())
        const result = {admin: user?.role === 'admin'}
        res.send(result);
      })
-     app.get('/student/instructor/:email', async (req, res)=>{
-       const email = req.params.email;
-       const query = {email: email}
-       const user = await studentCollection.findOne(query);
-       const result = {admin: user?.role === 'instructor'}
-       res.send(result);
-     })
-     
+     app.get('/student/instructor/:role', async (req, res) => {
+      const role = req.params.role;
+      const instructor = { role: 'instructor' }; 
+      const user = await studentCollection.find(instructor).toArray();
+      console.log(user)
+      res.send(user);
+    })
+
+    
+   
+
+
+    
+   
+
+
      app.patch('/student/admin/:id', async (req, res)=>{
        const id = req.params.id;
        const filter = {_id: new ObjectId(id)}
@@ -85,6 +98,10 @@ app.use(express.json())
        const result= await studentCollection.updateOne(filter, updateDoc);
        res.send(result)
      })
+
+   
+
+
      app.patch('/student/instructor/:id', async (req, res)=>{
        const id = req.params.id;
        const filter = {_id: new ObjectId(id)}
@@ -97,7 +114,8 @@ app.use(express.json())
        res.send(result)
      })
 
-   
+   ;
+  
 
      //classCollection
      app.post('/addclass', async(req, res)=>{
@@ -122,6 +140,29 @@ app.use(express.json())
       const result= await classCollection.updateOne(filter, updateDoc);
       res.send(result)
     })
+
+
+    //
+    
+    app.patch('/allclass/denay/:status', async (req, res)=>{
+      const status = req.params.status;
+      const filter = {status: 'pending'}
+      const updateDoc ={
+        $set:{
+          status:'deny '
+        },
+      };
+      const result= await classCollection.updateOne(filter, updateDoc);
+      res.send(result)
+    })
+    
+    
+    
+    
+    
+    
+    
+    //
 
     app.get('/allclass/approve', async (req, res) => {
       const status = req.query.status;
