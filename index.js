@@ -80,13 +80,6 @@ app.use(express.json())
     })
 
     
-   
-
-
-    
-   
-
-
      app.patch('/student/admin/:id', async (req, res)=>{
        const id = req.params.id;
        const filter = {_id: new ObjectId(id)}
@@ -243,6 +236,11 @@ app.post("/payments", async (req, res) => {
   res.send(result);
 });
   
+
+app.get('/payments', async(req, res)=>{
+  const result = await paymentsCollection.find().toArray();
+  res.send(result)
+})
 
 
 
