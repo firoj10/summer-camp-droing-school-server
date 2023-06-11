@@ -107,7 +107,7 @@ app.use(express.json())
        res.send(result)
      })
 
-   ;
+  
   
 
      //classCollection
@@ -133,10 +133,7 @@ app.use(express.json())
       const result= await classCollection.updateOne(filter, updateDoc);
       res.send(result)
     })
-
-
     //
-    
     app.patch('/allclass/denay/:status', async (req, res)=>{
       const status = req.params.status;
       const filter = {status: 'pending'}
@@ -148,13 +145,7 @@ app.use(express.json())
       const result= await classCollection.updateOne(filter, updateDoc);
       res.send(result)
     })
-    
-    
-    
-    
-    
-    
-    
+
     //
 
     app.get('/allclass/approve', async (req, res) => {
@@ -178,12 +169,6 @@ app.use(express.json())
       res.send(result);
     });
 
-
-
-
-
-
-
     app.post('/selectclass', async(req, res)=>{
       const item = req.body;
       console.log(item)
@@ -198,8 +183,8 @@ app.use(express.json())
       res.send(result);
     })
 
-/////////////
-//create payment intent
+
+//create payment intent system
 app.post("/create-payment-intent", async (req, res) => {
   const booking = req.body;
   const price = booking.price;
